@@ -1,35 +1,37 @@
 # File: lib/diary.rb
 class Diary
-    def initialize
-    end
-  
-    def add(entry) # entry is an instance of DiaryEntry
-      # Returns nothing
-    end
-  
-    def all
-      # Returns a list of instances of DiaryEntry
-    end
-  
-    def count_words
-      # Returns the number of words in all diary entries
-      # HINT: This method should make use of the `count_words` method on DiaryEntry.
-    end
-  
-    def reading_time(wpm) # wpm is an integer representing
-                          # the number of words the user can read per minute
-      # Returns an integer representing an estimate of the reading time in minutes
-      # if the user were to read all entries in the diary.
-    end
-  
-    def find_best_entry_for_reading_time(wpm, minutes)
-          # `wpm` is an integer representing the number of words the user can read
-          # per minute.
-          # `minutes` is an integer representing the number of minutes the user
-          # has to read.
-      # Returns an instance of diary entry representing the entry that is closest 
-      # to, but not over, the length that the user could read in the minutes they
-      # have available given their reading speed.
-    end
+  def initialize
+    @listof_entries = []
   end
-  
+
+  def add(entry)
+    @listof_entries << entry
+  end
+
+  def all
+    @listof_entries
+  end
+
+  def count_words
+    total = 0
+    @listof_entries.each do |entry|
+      total += entry.count_words
+    end
+    return total
+  end
+
+  def reading_time(wpm)
+    raise "Words per minute must be positive" if !wpm.positive?
+    (count_words / wpm.to_f).ceil
+  end
+
+  def find_best_entry_for_reading_time(wpm, minutes)
+    raise "Words per minute must be positive" if !wpm.positive?
+
+    user_time = wpm * minutes
+    readable = @listof_entries.select do |entry|
+      entry.count_words <= user_time
+    end
+    readable.max_by { |entry| entry.count_words }
+  end
+end
