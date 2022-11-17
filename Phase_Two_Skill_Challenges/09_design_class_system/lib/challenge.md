@@ -1,79 +1,181 @@
-
 {{PROBLEM}} Multi-Class Planned Design Recipe
 1. Describe the Problem
-Put or write the user story here. Add any clarifying notes you might have.
+
+As a user
+So that I can record my experiences
+I want to keep a regular diary
+
+As a user
+So that I can reflect on my experiences
+I want to read my past diary entries
+
+As a user
+So that I can reflect on my experiences in my busy day
+I want to select diary entries to read based on how much time I have and my reading speed
+
+As a user
+So that I can keep track of my tasks
+I want to keep a todo list along with my diary
+
+As a user
+So that I can keep track of my contacts
+I want to see a list of all of the mobile phone numbers in all my diary entries
+
+
+
 
 2. Design the Class System
 Consider diagramming out the classes and their relationships. Take care to focus on the details you see as important, not everything. The diagram below uses asciiflow.com but you could also use excalidraw.com, draw.io, or miro.com
 
-┌────────────────────────────┐
-│ MusicPlayer                │
-│                            │
-│ - add(track)               │
-│ - all                      │
-│ - search_by_title(keyword) │
-│   => [tracks...]           │
-└───────────┬────────────────┘
-            │
-            │ owns a list of
-            ▼
-┌─────────────────────────┐
-│ Track(title, artist)    │
-│                         │
-│ - title                 │
-│ - artist                │
-│ - format                │
-│   => "TITLE by ARTIST"  │
-└─────────────────────────┘
+
+               ┌────────────────────────────────────────────────────────────────────────────────────┐
+               │                               My Planner Class                                     │
+               │                                                                                    │
+               │    @list_of_diary_entry =                                                          │
+               │    @list_of_todos =                                                                │
+               │    @list_of_contacts =                                                             │
+               │                                                                                    │
+               │                                                                                    │
+               │  Methods:                                                                          │
+               │                                                                                    │
+               │  def read_diary(search by date?)                                                   │
+               │   def read_speed(wpm,time)                                             ┌───────────┤
+               │     def completed_todos                                                │           │
+               │        def incompleted_todos                                           │           │
+               │           def return_contacts                                                      │
+               │                                                                                    │
+               │                                                                                    │
+               │    │                                                                               │
+               │    │                                                                               │
+               └────┴──────┬──────────────────────▲────────────────────────────────▲────────────────┘
+                           │                      │                                │
+                           │                      │                                │
+                           │                      │                                │
+┌──────────────────────────┴───┬─┐ ┌──────────────┴───────────────────┐      ┌─────┴───────────────────────────┐
+│                              │ │ │                                  │      │                                 │
+│                              │ │ │         To do Entry   Class      │      │          Contacts Class         │
+│                              │ │ │                                  │      │                                 │
+│           Diary Entry   Class  │ │                                  │      │                                 │
+│                                │ │ hold Todo(string)                │      │   hold contact (name)           │
+│                   Nic)         │ │ hold Todo(due date)              │      │   hold contact (phone number)   │
+│     hold  date  (17/11 22)     │ │                                  │      │                                 │
+│  hold   contents (Toda  I met  │ │   Methods:                       │      │   Method:                       │
+│    hold contact                │ │     def return Todo              │      │    def return name              │
+│                                │ │       def return duedate         │      │      def return phone number    │
+│  Methods:                      │ │         def mark_complete        │      │                                 │
+│  def return date               │ │           def complete?          │      │                                 │
+│    def return contents         │ │                                  │      │                                 │
+│                                │ │                                  │      │                                 │
+│                             │  │ └──────────────────────────────────┘      └─────────────────────────────────┘
+│                   │         │
+└───────────────────┴─────────┴──
+
+
 Also design the interface of each class in more detail.
 
-class MusicLibrary
+class DiaryEntry 
+
+def initialize
+  # holds date
+  # holds contents
+end 
+
+def return_date 
+return date
+end 
+
+def return_contents
+return contents
+end 
+
+class Todo
+
   def initialize
-    # ...
+    # description
+    # due date
+    # complete?
   end
 
-  def add(track) # track is an instance of Track
-    # Track gets added to the library
-    # Returns nothing
+  def date
+    # returns the date
   end
 
-  def all
-    # Returns a list of track objects
+  def description
+    # returns the description
   end
-  
-  def search_by_title(keyword) # keyword is a string
-    # Returns a list of tracks with titles that include the keyword
+
+  def mark_complete?
+    # changes status
+  end
+
+  def complete?
+    # returns whether or not task is complete
   end
 end
 
-class Track
-  def initialize(title, artist) # title and artist are both strings
-  end
 
-  def format
-    # Returns a string of the form "TITLE by ARTIST"
-  end
-end
+
+class MyPlanner
+
+@list_of_diary_entry =
+@list_of_todos =
+@list_of_contacts =
+
+def read_diary(date)
+returns by date 
+end 
+
+def speed_read(wpm,minutes)
+counts @list_of_diary_entry entry 
+wpm*minutes / count_words 
+returns speedest entry to read 
+end 
+
+def completed_todo
+@list_of_todos.filter -> completed?
+end 
+
+def incompleted_todo
+@list_of_todos.filter -> incompleted?
+end 
+
+def return_contacts 
+@list_of_contacts.each -> puts name : contact
+end 
+
+
 3. Create Examples as Integration Tests
 Create examples of the classes being used together in different situations and combinations that reflect the ways in which the system will be used.
 
-# EXAMPLE
+#integration tests: 
 
-# Gets all tracks
-library = MusicLibrary.new
-track_1 = Track.new("Carte Blanche", "Veracocha")
-track_2 = Track.new("Synaesthesia", "The Thrillseekers")
-library.add(track_1)
-library.add(track_2)
-library.all # => [track_1, track_2]
-4. Create Examples as Unit Tests
-Create examples, where appropriate, of the behaviour of each relevant class at a more granular level of detail.
+1. Integration of todo's in MyPlanner Class 
 
-# EXAMPLE
+#returns incompleted tasks in MyPlanner Class 
+my_planner = MyPlanner.new
+task_one = Todo.new("buy milk", "18/11/22")
+my_planner.add(task_one)
+my_planner.incompleted_todo => ["buy milk"]
 
-# Constructs a track
-track = Track.new("Carte Blanche", "Veracocha")
-track.title # => "Carte Blanche"
+
+#returns completed tasks in MyPlanner Class
+my_planner = MyPlanner.new
+task_one = Todo.new("laundry", "20/11/22")
+my_planner.add(task_one)
+task_one.mark_complete
+my_planner.completed_todo => ["laundry"]
+
+2. Integration of diaryentries in MyPlanner Class 
+
+#returns diary date 
+my_planner = MyPlanner.new 
+diaryentry = DiaryEntry.new("21/11/22", "content content content")
+my_planner.date(diary_entry) => ["21/11/22"]
+
+# return best entry to read
+# return contacts 
+
+
 Encode each example as a test. You can add to the above list as you go.
 
 5. Implement the Behaviour
